@@ -6,14 +6,8 @@
 import crypto from 'crypto';
 import fs from 'fs';
 import path from 'path';
+import recursiveFs from 'recursive-fs';
 import stream from 'stream';
-
-// Do not throw an exception if either of these modules are missing, as they may not be needed by the
-// consumer of this file.
-// - recursiveFs: Only required for hashing of directories
-try {
-    var recursiveFs = require('recursive-fs');
-} catch (e) {}
 
 const HASH_ALGORITHM = 'sha256';
 
@@ -36,44 +30,39 @@ export function generatePackageManifestFromDirectory(
     directoryPath: string,
     basePath: string,
 ): Promise<PackageManifest> {
-    return new Promise<PackageManifest>((resolve, reject) => {
+    return new Promise<PackageManifest>(async (resolve, reject) => {
         var fileHashesMap = new Map<string, string>();
 
-        recursiveFs.readdirr(
-            directoryPath,
-            (error?: any, directories?: string[], files?: string[]): void => {
-                if (error) {
-                    reject(error);
-                    return;
-                }
+        try {
+            const { files } = await recursiveFs.read(directoryPath);
+            if (!files || files.length === 0) {
+                reject("Error: Can't sign the release because no files were found.");
+                return;
+            }
 
-                if (!files || files.length === 0) {
-                    reject("Error: Can't sign the release because no files were found.");
-                    return;
-                }
+            // Hash the files sequentially, because streaming them in parallel is not necessarily faster
+            var generateManifestPromise: Promise<void> = files.reduce(
+                (soFar: Promise<void>, filePath: string) => {
+                    return soFar.then(() => {
+                        var relativePath: string = PackageManifest.normalizePath(
+                            path.relative(basePath, filePath),
+                        );
+                        if (!PackageManifest.isIgnored(relativePath)) {
+                            return hashFile(filePath).then((hash: string) => {
+                                fileHashesMap.set(relativePath, hash);
+                            });
+                        }
+                    });
+                },
+                Promise.resolve(null as void),
+            );
 
-                // Hash the files sequentially, because streaming them in parallel is not necessarily faster
-                var generateManifestPromise: Promise<void> = files.reduce(
-                    (soFar: Promise<void>, filePath: string) => {
-                        return soFar.then(() => {
-                            var relativePath: string = PackageManifest.normalizePath(
-                                path.relative(basePath, filePath),
-                            );
-                            if (!PackageManifest.isIgnored(relativePath)) {
-                                return hashFile(filePath).then((hash: string) => {
-                                    fileHashesMap.set(relativePath, hash);
-                                });
-                            }
-                        });
-                    },
-                    Promise.resolve(null as void),
-                );
-
-                generateManifestPromise.then(() => {
-                    resolve(new PackageManifest(fileHashesMap));
-                }, reject);
-            },
-        );
+            generateManifestPromise.then(() => {
+                resolve(new PackageManifest(fileHashesMap));
+            }, reject);
+        } catch (error) {
+            reject(error);
+        }
     });
 }
 

@@ -10,6 +10,7 @@ CodePush是一个云服务，它能让Cordova和React Native的开发者将手�
 
 ![CodePush CLI](https://cloud.githubusercontent.com/assets/116461/14505396/c97bdc78-016d-11e6-89da-3f3557f8b33d.png)
 
+* [关于本仓库](#关于本仓库)
 * [安装](#安装)
 * [快速开始](#快速开始)
 * [创建账号](#创建账号)
@@ -29,10 +30,16 @@ CodePush是一个云服务，它能让Cordova和React Native的开发者将手�
 
 [[English Version]](./README.md)
 
+## 关于本仓库
+本仓库的目的是为了适配开源的[code-push-server](https://github.com/shm-open/code-push-server). 因为官方的`code-push-cli`已经不再维护更新, 而`appcenter-cli`又无法登录自己搭建的`code-push-server`, 所以我们分叉了这个cli项目, 用来:
+- 适配开源`code-push-server`
+- 移植一些有价值的`appcenter-cli`的新功能, 比如针对React Native Hermes的支持
+- 保持项目依赖的更新
+
 ## 安装
 
 * 安装 [Node.js](https://nodejs.org/)
-* 安装 CodePush CLI: `npm install -g code-push-cli`
+* 安装 CodePush CLI: `npm install -g @shm-open/code-push-cli`
 
 ## 快速开始
 

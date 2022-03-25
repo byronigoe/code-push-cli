@@ -1,11 +1,11 @@
 {
   "name": "@byronigoe/code-push-cli",
-  "version": "2.5.2",
+  "version": "2.5.5",
   "description": "Management CLI for a self-hosted CodePush Server",
   "main": "bin/cli.js",
   "scripts": {
     "start": "tsc --watch",
-    "build": "tsc",
+    "build": "rm -rf bin && tsc",
     "release": "npm test && npm run build && standard-version && git push --follow-tags origin master && npm publish",
     "test": "echo 'no tests'"
   },
@@ -32,7 +32,7 @@
   "dependencies": {
     "backslash": "0.2.0",
     "chalk": "4.1.2",
-    "cli-table3": "0.6.0",
+    "cli-table3": "0.6.1",
     "code-push": "2.0.7",
     "email-validator": "2.0.4",
     "gradle-to-js": "2.0.0",
@@ -40,31 +40,31 @@
     "mkdirp": "1.0.4",
     "moment": "2.29.1",
     "opener": "1.5.2",
-    "parse-duration": "1.0.0",
+    "parse-duration": "1.0.2",
     "plist": "3.0.4",
-    "progress": "1.1.8",
-    "prompt": "0.2.14",
+    "progress": "2.0.3",
+    "prompt": "1.2.2",
     "properties": "1.2.1",
-    "recursive-fs": "0.1.4",
+    "recursive-fs": "2.1.0",
     "rimraf": "3.0.2",
     "semver": "7.3.5",
-    "simctl": "2.0.0",
+    "simctl": "2.0.3",
     "slash": "3.0.0",
     "update-notifier": "5.1.0",
     "which": "2.0.2",
     "wordwrap": "1.0.0",
     "xml2js": "0.4.23",
-    "yargs": "17.1.1",
+    "yargs": "17.3.1",
     "yazl": "2.5.1"
   },
   "devDependencies": {
-    "@shm-open/eslint-config-bundle": "1.6.2",
-    "@types/node": "14.6.0",
-    "@types/semver": "7.3.3",
+    "@shm-open/eslint-config-bundle": "1.9.3",
+    "@types/node": "16.11.26",
+    "@types/semver": "7.3.9",
     "@types/which": "2.0.1",
-    "@types/yargs": "17.0.2",
+    "@types/yargs": "17.0.9",
     "@types/yazl": "2.4.2",
-    "standard-version": "9.3.1",
-    "typescript": "4.4.3"
+    "standard-version": "9.3.2",
+    "typescript": "4.6.2"
   }
 }

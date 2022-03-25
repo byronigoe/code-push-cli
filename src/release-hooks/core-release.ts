@@ -30,31 +30,26 @@ var coreReleaseHook: cli.ReleaseHook = (
                 return Promise.resolve(releaseFiles);
             }
 
-            return new Promise<cli.ReleaseFile[]>((resolve, reject) => {
+            return new Promise<cli.ReleaseFile[]>(async (resolve, reject) => {
                 var directoryPath: string = currentCommand.package;
                 var baseDirectoryPath = path.join(directoryPath, '..'); // For legacy reasons, put the root directory in the zip
 
-                recursiveFs.readdirr(
-                    currentCommand.package,
-                    (error?: any, directories?: string[], files?: string[]): void => {
-                        if (error) {
-                            reject(error);
-                            return;
-                        }
-
-                        files.forEach((filePath: string) => {
-                            var relativePath: string = path.relative(baseDirectoryPath, filePath);
-                            // yazl does not like backslash (\) in the metadata path.
-                            relativePath = slash(relativePath);
-                            releaseFiles.push({
-                                sourceLocation: filePath,
-                                targetLocation: relativePath,
-                            });
+                try {
+                    var { files } = await recursiveFs.read(currentCommand.package);
+                    files.forEach((filePath: string) => {
+                        var relativePath: string = path.relative(baseDirectoryPath, filePath);
+                        // yazl does not like backslash (\) in the metadata path.
+                        relativePath = slash(relativePath);
+                        releaseFiles.push({
+                            sourceLocation: filePath,
+                            targetLocation: relativePath,
                         });
+                    });
 
-                        resolve(releaseFiles);
-                    },
-                );
+                    resolve(releaseFiles);
+                } catch (error) {
+                    reject(error);
+                }
             });
         })
         .then((releaseFiles: cli.ReleaseFile[]) => {
