@@ -1,11 +1,14 @@
-# CodePush Management CLI
+# CodePush Management CLI ![Node.js CI](https://github.com/shm-open/code-push-cli/workflows/Node.js%20CI/badge.svg)
+
+
+[[Chinese version 中文版]](./README.cn.md)
 
 CodePush is a cloud service that enables Cordova and React Native developers to deploy mobile app updates directly to their users' devices. It works by acting as a central repository that developers can publish updates to (JS, HTML, CSS and images), and that apps can query for updates from (using the provided client SDKs for [Cordova](http://github.com/Microsoft/cordova-plugin-code-push) and [React Native](http://github.com/Microsoft/react-native-code-push)). This allows you to have a more deterministic and direct engagement model with your user base, when addressing bugs and/or adding small features that don't require you to re-build a binary and re-distribute it through the respective app stores.
 
 ![CodePush CLI](https://cloud.githubusercontent.com/assets/245892/26749409/feb439f6-47d7-11e7-98fd-07d750b856d8.png)
 
 <!-- CLI Catalog -->
-
+* [About This Fork](#about-this-fork)
 * [Installation](#installation)
 * [Getting Started](#getting-started)
 * [Account Management](#account-management)
@@ -28,14 +31,18 @@ CodePush is a cloud service that enables Cordova and React Native developers to 
 * [Clearing Release History](#clearing-release-history)
 * [Code Signing](#code-signing)
 
-[[Chinese version 中文版]](./README-cn.md)
 
 <!-- CLI Catalog -->
+## About This Fork
+This fork is for open source [code-push-server](https://github.com/shm-open/code-push-server). Since the original `code-push-cli` is deprecated and `appcenter-cli` cannot work with self hosted `code-push-server`. We create this fork to:
+- work with open source `code-push-server`
+- port necessary new features from `appcenter-cli`, such as React Native Hermes support
+- keep dependencies up-to-date
 
 ## Installation
 
 * Install [Node.js](https://nodejs.org/)
-* Install the CodePush CLI: `npm install -g code-push-cli`
+* Install the CodePush CLI: `npm install -g @shm-open/code-push-cli`
 
 ## Getting Started
 
@@ -220,7 +227,7 @@ code-push collaborator ls <appName>
 The update to version 2.0.0.0 saw the removal of the `app transfer` command. You may still transfer ownership of your applications by managing the transfer through an organization. This requires that you visit [Mobile Center](https://mobile.azure.com) and execute a few steps.
 
 1. Go to to [https://mobile.azure.com](https://mobile.azure.com) and create a new organization.
-2. Invite the person you to whom you wish to transfer the app to the organization. Once they have accepted the invitation change their access permissions to "Admin". 
+2. Invite the person you to whom you wish to transfer the app to the organization. Once they have accepted the invitation change their access permissions to "Admin".
 3. Navigate to your app and click on the "Manage App" button (top right when on the "Getting Started" page for the app). Hit the Transfer button there to transfer the app to the org. Note that currently this operation cannot be reversed, although this will change in the future.
 4. Once your invitee has accepted, select the organization that you created and remove yourself from it.
 
@@ -894,7 +901,7 @@ At the end of release command, the cli computes the bundle's content hash and pl
 
 If you are planning to use this feature you need to do the following:
 
-1. Produce new binary update including 
+1. Produce new binary update including
    * updated codepush plugin supporting Code Signing
    * configure your code-push sdk to use your public key (please, refer relevent React Native SDK ([iOS](https://github.com/Microsoft/react-native-code-push/blob/master/docs/setup-ios.md#code-signing-setup),  [Android](https://github.com/Microsoft/react-native-code-push/blob/master/docs/setup-android.md#code-signing-setup)) or [Cordova SDK](https://github.com/Microsoft/cordova-plugin-code-push#getting-started) sections for details)
 2. Produce a new CodePush update that targets the new binary version and specifies a `--privateKeyPath` (or simply `-k`) parameter value
