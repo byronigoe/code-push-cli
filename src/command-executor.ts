@@ -1580,6 +1580,9 @@ function whoami(command: cli.ICommand): Promise<void> {
         } else {
             out.text(accountInfo);
         }
+        if (connectionInfo.customServerUrl) {
+          out.text(chalk.green('Code Push Server: ') + connectionInfo.customServerUrl);
+        }
     });
 }
 
